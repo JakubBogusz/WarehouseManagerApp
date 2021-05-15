@@ -24,7 +24,7 @@ namespace RMDesktopUI.Helpers
             string api = ConfigurationManager.AppSettings["api"];
 
             apiClient = new HttpClient();
-            apiClient.BaseAddress = new Uri("");
+            apiClient.BaseAddress = new Uri(api);
             apiClient.DefaultRequestHeaders.Accept.Clear();
             apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -35,17 +35,17 @@ namespace RMDesktopUI.Helpers
             var data = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("grant_type", "password"),
-                new KeyValuePair<string, string>("grant_type", username),
-                new KeyValuePair<string, string>("grant_type", password)
+                new KeyValuePair<string, string>("username", username),
+                new KeyValuePair<string, string>("password", password)
             });
 
-            AuthenticatedUser result = new AuthenticatedUser();
 
             using (HttpResponseMessage response = await apiClient.PostAsync("/Token", data))
             {
                 if (response.IsSuccessStatusCode)
                 {
-                    result = await response.Content.ReadAsAsync<AuthenticatedUser>();
+                    var result = await response.Content.ReadAsAsync<AuthenticatedUser>();
+                    return result;
                 }
                 else
                 {
@@ -53,8 +53,6 @@ namespace RMDesktopUI.Helpers
                 }
 
             }
-
-            return result;
 
         }
     }
