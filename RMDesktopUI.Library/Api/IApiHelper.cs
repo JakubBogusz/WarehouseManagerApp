@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using RMDesktopUI.Models;
 using System.Threading.Tasks;
-using RMDesktopUI.Models;
+using RMDesktopUI.Library.Models;
 
-namespace RMDesktopUI.Helpers
+
+namespace RMDesktopUI.Library.Api
 {
     public interface IApiHelper
     {
         Task<AuthenticatedUser> Authenticate(string username, string password);
+
+        Task GetLoggedInUserInfo(string token);
     }
 }
