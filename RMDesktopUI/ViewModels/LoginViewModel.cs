@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using Caliburn.Micro;
+using RMDesktopUI.EventModels;
 using RMDesktopUI.Library.Api;
 
 namespace RMDesktopUI.ViewModels
@@ -16,10 +17,12 @@ namespace RMDesktopUI.ViewModels
         private string _userName;
         private string _password;
         private IApiHelper _apiHelper;
+        private IEventAggregator _eventAggregator;
 
-        public LoginViewModel(IApiHelper apiHelper)
+        public LoginViewModel(IApiHelper apiHelper, IEventAggregator eventAggregator)
         {
             _apiHelper = apiHelper;
+            _eventAggregator = eventAggregator;
         }
 
         public string UserName
@@ -96,6 +99,8 @@ namespace RMDesktopUI.ViewModels
                 
                 //Capture more information about the user
                 await _apiHelper.GetLoggedInUserInfo(result.Access_Token);
+
+                await _eventAggregator.PublishOnUIThreadAsync(new LogOnEvent());
             }
             catch (Exception ex)
             {

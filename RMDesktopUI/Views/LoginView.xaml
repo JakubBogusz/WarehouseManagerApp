@@ -44,7 +44,7 @@
 
         <!--Login row-->
         <Button Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Padding="20 5"
-                HorizontalAlignment="Center" x:Name="LogIn">
+                HorizontalAlignment="Center" x:Name="LogIn" Click="LogIn_Click">
             Log In
         </Button>
     </Grid>

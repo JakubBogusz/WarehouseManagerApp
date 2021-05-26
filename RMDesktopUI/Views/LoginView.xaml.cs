@@ -24,5 +24,10 @@ namespace RMDesktopUI.Views
         {
             InitializeComponent();
         }
+
+        private void LogIn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
