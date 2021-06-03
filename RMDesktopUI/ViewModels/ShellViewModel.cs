@@ -11,21 +11,19 @@ namespace RMDesktopUI.ViewModels
 {
     public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>
     {
-        private IEventAggregator _eventAggregator;
-        private SalesViewModel _salesViewModel;
-        private SimpleContainer _container;
+        // TODO - is something breaks had to be without readonly before
+        private readonly IEventAggregator _eventAggregator;
+        private readonly SalesViewModel _salesViewModel;
 
-        public ShellViewModel(IEventAggregator eventAggregator, SalesViewModel salesViewModel,
-            SimpleContainer container)
+        public ShellViewModel(IEventAggregator eventAggregator, SalesViewModel salesViewModel)
         {
             _eventAggregator = eventAggregator;
             _salesViewModel = salesViewModel;
-            _container = container;
 
             _eventAggregator.Subscribe(this);
             
             
-            ActivateItemAsync(_container.GetInstance<LoginViewModel>()); 
+            ActivateItemAsync(IoC.Get<LoginViewModel>()); 
           
         }
 
