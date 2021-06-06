@@ -16,7 +16,7 @@ namespace RMDesktopUI.Library.Models
         {
             get
             {
-                return $"{ Product.ProductName } ({ QuantityInCart  })";
+                return $"{ Product.ProductName } ({ QuantityInCart })";
             }
         }
     }

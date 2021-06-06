@@ -5,12 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using AutoMapper;
 using Caliburn.Micro;
 using RMDesktopUI.Helpers;
 using RMDesktopUI.Library.Api;
 using RMDesktopUI.Library.Helpers;
 using RMDesktopUI.Library.Models;
+using RMDesktopUI.Models;
 using RMDesktopUI.ViewModels;
+
 
 namespace RMDesktopUI
 {
@@ -28,8 +31,24 @@ namespace RMDesktopUI
                 "PasswordChanged");
         }
 
+        private IMapper ConfigureAutomapper()
+        {
+            var configMapper = new MapperConfiguration(config =>
+            {
+                config.CreateMap<UIProductModel, UIProductDisplayModel>();
+                config.CreateMap<CartItemModel, CartItemDisplayModel>();
+
+            });
+
+            var output = configMapper.CreateMapper();
+
+            return output;
+        }
+
         protected override void Configure()
         {
+            _container.Instance(ConfigureAutomapper());
+
             _container.Instance(_container)
                 .PerRequest<IProductEndpoint, ProductEndpoint>()
                 .PerRequest<ISaleEndpoint, SaleEndpoint>();
