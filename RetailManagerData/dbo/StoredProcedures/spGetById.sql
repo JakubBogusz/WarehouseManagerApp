@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[GetById]
+﻿CREATE PROCEDURE [dbo].[spGetById]
 	@Id int 
 
 AS
@@ -10,4 +10,3 @@ BEGIN
 	WHERE Id = @Id
 
 END
-	

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
 namespace TRMDataManager.Library.Models
 {
     public class SaleModel
     {
-        public List<SaleDetailModel> SaleDetails { get; set; } = new List<SaleDetailModel>();
+        public List<SaleDetailModel> SaleDetails { get; set; }
     }
 }

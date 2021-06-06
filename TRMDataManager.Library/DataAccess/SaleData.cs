@@ -11,7 +11,7 @@ namespace TRMDataManager.Library.DataAccess
 {
     public class SaleData
     {
-        
+
         public void SaveSale(SaleModel saleInfo, string cashierId)
         {
             // TODO - Make this SOLID/DRY
@@ -19,7 +19,7 @@ namespace TRMDataManager.Library.DataAccess
 
             List<SaleDetailDBModel> saleDetails = new List<SaleDetailDBModel>();
             ProductData products = new ProductData();
-            var taxRate = ConfigHelper.GetTaxRate();
+            var taxRate = ConfigHelper.GetTaxRate()/100;
 
             foreach (var item in saleInfo.SaleDetails)
             {
@@ -42,10 +42,10 @@ namespace TRMDataManager.Library.DataAccess
                 {
                     detail.Tax = (detail.PurchasePrice * taxRate);
                 }
+
                 saleDetails.Add(detail);
             }
- 
-            // Create saleInfo model
+
             SaleDBModel sale = new SaleDBModel
             {
                 SubTotal = saleDetails.Sum(x => x.PurchasePrice),
@@ -55,11 +55,17 @@ namespace TRMDataManager.Library.DataAccess
 
             sale.Total = sale.SubTotal + sale.Tax;
 
-            //Save saleInfo model
             SqlDataAccess sql = new SqlDataAccess();
             sql.SaveData("dbo.spSale_Insert", sale, "WarehouseManagerData");
 
             //Get the ID from the saleInfo model
+
+            sale.Id = sql.LoadData<int, dynamic>("spSale_Lookup", new
+            {
+                sale.CashierId, sale.SaleDate
+            }, "WarehouseManagerData").FirstOrDefault();
+
+
             //Finish filling the saleInfo detail  models
             foreach (var item in saleDetails)
             {
@@ -68,18 +74,8 @@ namespace TRMDataManager.Library.DataAccess
                 sql.SaveData("dbo.spSaleDetail_Insert", item, "WarehouseManagerData");
             }
 
-            
-            
-            //Save the saleInfo detail models
 
         }
-        //public List<ProductModel> GetProducts()
-        //{
-        //    SqlDataAccess sql = new SqlDataAccess();
-
-        //    var output = sql.LoadData<ProductModel, dynamic>("dbo.spProduct_GetAll", new { }, "WarehouseManagerData");
-
-        //    return output;
-        //}
+   
     }
 }

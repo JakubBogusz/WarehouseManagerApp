@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using RMDesktopUI.Library.Models;
-using TRMDataManager.Models;
 
 //using TRMDataManager.Models;
 
@@ -22,7 +21,7 @@ namespace RMDesktopUI.Library.Api
 
         public async Task PostSale(SaleModel sale)
         {
-            using (HttpResponseMessage response = await  _apiHelper.ApiClient.PostAsJsonAsync("/api/Sale", sale))
+            using (HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("/api/Sale", sale))
             {
                 if (response.IsSuccessStatusCode)
                 {
@@ -36,6 +35,6 @@ namespace RMDesktopUI.Library.Api
 
         }
 
-      
+
     }
 }

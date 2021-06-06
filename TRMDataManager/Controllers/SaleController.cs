@@ -8,6 +8,7 @@ using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using TRMDataManager.Library.DataAccess;
 using TRMDataManager.Library.Models;
+using TRMDataManager.Models;
 
 namespace TRMDataManager.Controllers
 {

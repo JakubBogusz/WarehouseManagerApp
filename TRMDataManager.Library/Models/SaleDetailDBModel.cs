@@ -15,3 +15,4 @@ namespace TRMDataManager.Library.Models
         public decimal Tax { get; set; }
     }
 }
+
