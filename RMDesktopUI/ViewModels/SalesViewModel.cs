@@ -55,6 +55,32 @@ namespace RMDesktopUI.ViewModels
             }
         }
 
+        private BindingList<UIProductDisplayModel> _products;
+
+        public BindingList<UIProductDisplayModel> Products
+        {
+            get { return _products; }
+            set
+            {
+                _products = value;
+                NotifyOfPropertyChange(() => Products);
+            }
+        }
+
+        private async Task ResetSalesViewModel()
+        {
+            Cart = new BindingList<CartItemDisplayModel>();
+
+            // TODO - Add clearing the selectedCartItem if it does not doing itself
+
+            await LoadProducts();
+
+            NotifyOfPropertyChange(() => SubTotal);
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
+        }
+
         private CartItemDisplayModel _selectedCartItem;
 
         public CartItemDisplayModel SelectedCartItem
@@ -65,18 +91,6 @@ namespace RMDesktopUI.ViewModels
                 _selectedCartItem = value;
                 NotifyOfPropertyChange(() => SelectedCartItem);
                 NotifyOfPropertyChange(() => CanRemoveFromCart);
-            }
-        }
-
-        private BindingList<UIProductDisplayModel> _products;
-
-        public BindingList<UIProductDisplayModel> Products
-        {
-            get { return _products; }
-            set
-            {
-                _products = value; 
-                NotifyOfPropertyChange(() => Products);
             }
         }
 
@@ -218,9 +232,7 @@ namespace RMDesktopUI.ViewModels
             {
                 bool output = false;
 
-                //Make sure something is selected 
-
-                if (SelectedCartItem != null && SelectedCartItem?.Product.QuantityInStock > 0)
+                if (SelectedCartItem != null && SelectedCartItem?.QuantityInCart > 0)
                 {
                     output = true;
                 }
@@ -241,10 +253,12 @@ namespace RMDesktopUI.ViewModels
             {
                 Cart.Remove(SelectedCartItem);
             }
+
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
             NotifyOfPropertyChange(() => CanCheckOut);
+            NotifyOfPropertyChange(() => CanAddToCart);
         }
      
 
@@ -278,6 +292,8 @@ namespace RMDesktopUI.ViewModels
             }
 
             await _saleEndpoint.PostSale(sale);
+
+            await ResetSalesViewModel();
         }
 
     }
