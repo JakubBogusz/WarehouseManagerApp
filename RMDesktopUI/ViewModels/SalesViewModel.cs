@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using AutoMapper;
 using Caliburn.Micro;
 using RMDesktopUI.Library.Api;
@@ -19,19 +21,46 @@ namespace RMDesktopUI.ViewModels
         private IConfigHelper _configHelper;
         private ISaleEndpoint _saleEndpoint;
         private IMapper _mapper;
+        private readonly StatusInfoViewModel _statusInfo;
+        private readonly IWindowManager _windowManager;
 
         public SalesViewModel(IProductEndpoint productEndpoint, IConfigHelper configHelper, 
-            ISaleEndpoint saleEndpoint, IMapper mapper)
+            ISaleEndpoint saleEndpoint, IMapper mapper, StatusInfoViewModel statusInfo, IWindowManager windowManager)
         {
             _productEndpoint = productEndpoint;
             _configHelper = configHelper;
             _saleEndpoint = saleEndpoint;
             _mapper = mapper;
+            _statusInfo = statusInfo;
+            _windowManager = windowManager;
         }
         protected override async void OnViewLoaded(object view)
         {
             base.OnViewLoaded(view);
-             await LoadProducts();
+            try
+            {
+                await LoadProducts();
+            }
+            catch (Exception ex)
+            {
+                dynamic settings = new ExpandoObject();
+                settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                settings.ResizeMode = ResizeMode.NoResize;
+                settings.Title = "System Error";
+
+                if (ex.Message == "Unauthorized")
+                {
+                    _statusInfo.UpdateMessage("Unauthorized Access", "You do not have permission to interact with this part of application.");
+                    await _windowManager.ShowDialogAsync(_statusInfo, null, settings);
+                }
+                else
+                {
+                    _statusInfo.UpdateMessage("Fatal Exception", ex.Message);
+                    await _windowManager.ShowDialogAsync(_statusInfo, null, settings);
+                }
+
+                await TryCloseAsync();
+            }
         }
 
         private async Task LoadProducts()
