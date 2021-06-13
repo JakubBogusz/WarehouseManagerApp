@@ -11,7 +11,7 @@ namespace RMDesktopUI.Library.Models
         string EmailAddress { get; set; }
         DateTime CreatedDate { get; set; }
 
-        void LogOffUser();
+        void ResetUserModel();
 
     }
 }

@@ -37,7 +37,7 @@ namespace RMDesktopUI.ViewModels
 
         public void LogOut()
         {
-            _userModel.LogOffUser();
+            _userModel.ResetUserModel();
             ActivateItemAsync(IoC.Get<LoginViewModel>());
             NotifyOfPropertyChange(() => IsLoggedIn);
         }

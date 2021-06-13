@@ -19,7 +19,7 @@ namespace TRMDataManager.Library.DataAccess
 
             List<SaleDetailDBModel> saleDetails = new List<SaleDetailDBModel>();
             ProductData products = new ProductData();
-            var taxRate = ConfigHelper.GetTaxRate()/100;
+            var taxRate = ConfigHelper.GetTaxRate() / 100;
 
             foreach (var item in saleInfo.SaleDetails)
             {
@@ -55,27 +55,43 @@ namespace TRMDataManager.Library.DataAccess
 
             sale.Total = sale.SubTotal + sale.Tax;
 
-            SqlDataAccess sql = new SqlDataAccess();
-            sql.SaveData("dbo.spSale_Insert", sale, "WarehouseManagerData");
 
-            //Get the ID from the saleInfo model
-
-            sale.Id = sql.LoadData<int, dynamic>("spSale_Lookup", new
+            using (SqlDataAccess sql = new SqlDataAccess())
             {
-                sale.CashierId, sale.SaleDate
-            }, "WarehouseManagerData").FirstOrDefault();
+                try
+                {
+                    sql.StartTransaction("WarehouseManagerData");
+                    sql.SaveDataInTransaction("dbo.spSale_Insert", sale);
+
+                    //Get the ID from the saleInfo model
+                    sale.Id = sql.LoadDataInTransaction<int, dynamic>("spSale_Lookup", new
+                    {
+                        sale.CashierId,
+                        sale.SaleDate
+                    }).FirstOrDefault();
 
 
-            //Finish filling the saleInfo detail  models
-            foreach (var item in saleDetails)
-            {
-                item.SaleId = sale.Id;
+                    //Finish filling the saleInfo detail  models
+                    foreach (var item in saleDetails)
+                    {
+                        item.SaleId = sale.Id;
 
-                sql.SaveData("dbo.spSaleDetail_Insert", item, "WarehouseManagerData");
+                        sql.SaveDataInTransaction("dbo.spSaleDetail_Insert", item);
+                    }
+
+                    sql.CommitTransaction();
+                }
+                catch (Exception ex)
+                {
+                    sql.RollbackTransaction();
+                    throw;
+                }
             }
 
 
+
+
         }
-   
+
     }
 }
