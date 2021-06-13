@@ -10,7 +10,7 @@ using TRMDataManager.Library.Models;
 
 namespace TRMDataManager.Controllers
 {
-    [System.Web.Http.Authorize]
+    [Authorize]
     public class UserController : ApiController
     {
       
