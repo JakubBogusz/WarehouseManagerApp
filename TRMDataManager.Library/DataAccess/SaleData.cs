@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using TRMDataManager.Library.Internal.DataAccess;
@@ -64,7 +65,7 @@ namespace TRMDataManager.Library.DataAccess
                     sql.SaveDataInTransaction("dbo.spSale_Insert", sale);
 
                     //Get the ID from the saleInfo model
-                    sale.Id = sql.LoadDataInTransaction<int, dynamic>("spSale_Lookup", new
+                    sale.Id = sql.LoadDataInTransaction<int, dynamic>("dbo.spSale_Lookup", new
                     {
                         sale.CashierId,
                         sale.SaleDate
@@ -87,11 +88,16 @@ namespace TRMDataManager.Library.DataAccess
                     throw;
                 }
             }
-
-
-
-
         }
 
+        public List<SaleReportModel> GetSaleReport()
+        {
+            SqlDataAccess sql = new SqlDataAccess();
+
+            var output =
+                sql.LoadData<SaleReportModel, dynamic>("dbo.spSale_SaleReport", new { }, "WarehouseManagerData");
+
+            return output;
+        }
     }
 }
