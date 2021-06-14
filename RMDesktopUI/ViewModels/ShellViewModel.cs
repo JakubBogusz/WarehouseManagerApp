@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using RMDesktopUI.EventModels;
+using RMDesktopUI.Library.Api;
 using RMDesktopUI.Library.Models;
 
 namespace RMDesktopUI.ViewModels
@@ -16,12 +17,15 @@ namespace RMDesktopUI.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private readonly SalesViewModel _salesViewModel;
         private readonly ILoggedInUserModel _userModel;
+        private IApiHelper _apiHelper;
 
-        public ShellViewModel(IEventAggregator eventAggregator, SalesViewModel salesViewModel, ILoggedInUserModel userModel)
+        public ShellViewModel(IEventAggregator eventAggregator, SalesViewModel salesViewModel, ILoggedInUserModel userModel,
+            IApiHelper apiHelper)
         {
             _eventAggregator = eventAggregator;
             _salesViewModel = salesViewModel;
             _userModel = userModel;
+            _apiHelper = apiHelper;
 
             _eventAggregator.Subscribe(this);
             
@@ -35,9 +39,17 @@ namespace RMDesktopUI.ViewModels
             TryCloseAsync();
         }
 
+        public void UserManagement()
+        {
+           ActivateItemAsync(IoC.Get<UserDisplayViewModel>());
+        }
+
         public void LogOut()
         {
             _userModel.ResetUserModel();
+
+            // TODO - here missing a _apiHelper.LogOffUser();
+          
             ActivateItemAsync(IoC.Get<LoginViewModel>());
             NotifyOfPropertyChange(() => IsLoggedIn);
         }
