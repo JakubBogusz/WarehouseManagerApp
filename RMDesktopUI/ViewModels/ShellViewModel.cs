@@ -54,6 +54,13 @@ namespace RMDesktopUI.ViewModels
             NotifyOfPropertyChange(() => IsLoggedIn);
         }
 
+        //public void SignIn()
+        //{
+        //    _userModel.ResetUserModel();
+        //    ActivateItemAsync(IoC.Get<LoginViewModel>());
+        //    NotifyOfPropertyChange(() => IsLoggedIn);
+        //}
+
         public bool IsLoggedIn
         {
             get
