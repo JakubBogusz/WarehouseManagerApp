@@ -8,14 +8,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 
 namespace TRMDataManager.Library.Internal.DataAccess
 {
     internal class SqlDataAccess : IDisposable
     {
-        public string GetConnectionString(string name)
+        private readonly IConfiguration _config;
+
+        public SqlDataAccess(IConfiguration config)
         {
-            return ConfigurationManager.ConnectionStrings[name].ConnectionString;
+            _config = config;
+        }
+
+        public string GetConnectionString(string name)
+        { return _config.GetConnectionString(name);
+           //return ConfigurationManager.ConnectionStrings[name].ConnectionString;
         }
 
         public List<T> LoadData<T, U>(string storedProcedure, U parameters, string connectionStringName)

@@ -10,6 +10,7 @@ using DataManagerApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using TRMDataManager.Library.DataAccess;
 using TRMDataManager.Library.Models;
 
@@ -23,19 +24,22 @@ namespace DataManagerApi.Controllers
         private readonly ApplicationDbContext _context;
 
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IConfiguration _config;
 
-        public UserController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public UserController(ApplicationDbContext context, 
+            UserManager<IdentityUser> userManager,
+            IConfiguration config)
         {
             _context = context;
             _userManager = userManager;
-
+            _config = config;
         }
 
         [HttpGet]
         public UserModel GetById()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            UserData data = new UserData();
+            UserData data = new UserData(_config);
 
             return data.GetUserById(userId).First();
 
