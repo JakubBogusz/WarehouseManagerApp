@@ -13,7 +13,6 @@ namespace RMDesktopUI.ViewModels
 {
     public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>
     {
-        // TODO - is something breaks had to be without readonly before
         private readonly IEventAggregator _eventAggregator;
         private readonly SalesViewModel _salesViewModel;
         private readonly ILoggedInUserModel _userModel;
@@ -27,11 +26,11 @@ namespace RMDesktopUI.ViewModels
             _userModel = userModel;
             _apiHelper = apiHelper;
 
-            _eventAggregator.Subscribe(this);
-            
-            
-            ActivateItemAsync(IoC.Get<LoginViewModel>()); 
-          
+            _eventAggregator.SubscribeOnPublishedThread(this);
+
+
+            ActivateItemAsync(IoC.Get<LoginViewModel>(), new CancellationToken());
+
         }
 
         public void ExitApplication()
@@ -39,18 +38,17 @@ namespace RMDesktopUI.ViewModels
             TryCloseAsync();
         }
 
-        public void UserManagement()
+        public async Task UserManagement()
         {
-           ActivateItemAsync(IoC.Get<UserDisplayViewModel>());
+            await ActivateItemAsync(IoC.Get<UserDisplayViewModel>(), new CancellationToken());
         }
 
-        public void LogOut()
+        public async Task LogOut()
         {
             _userModel.ResetUserModel();
+            _apiHelper.LogOffUser();
 
-            // TODO - here missing a _apiHelper.LogOffUser();
-          
-            ActivateItemAsync(IoC.Get<LoginViewModel>());
+            await ActivateItemAsync(IoC.Get<LoginViewModel>(), new CancellationToken());
             NotifyOfPropertyChange(() => IsLoggedIn);
         }
 
@@ -78,10 +76,9 @@ namespace RMDesktopUI.ViewModels
 
         public async Task HandleAsync(LogOnEvent message, CancellationToken cancellationToken)
         {
-             
-             await ActivateItemAsync(_salesViewModel, cancellationToken);
-             NotifyOfPropertyChange(() => IsLoggedIn);
-             //NotifyOfPropertyChange(() => IsLoggedIn);
+            await ActivateItemAsync(_salesViewModel, cancellationToken);
+            NotifyOfPropertyChange(() => IsLoggedIn);
+            //NotifyOfPropertyChange(() => IsLoggedIn);
         }
     }
 }
