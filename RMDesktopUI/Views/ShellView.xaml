@@ -15,7 +15,6 @@
                 <MenuItem x:Name="UserManagement" Header="User_Management"/>
             </MenuItem>
             <MenuItem Header="_Account" Visibility="Visible" >
-                <MenuItem Header="_SignIn" />
                 <MenuItem x:Name="LogOut" Header="_Log Out" Visibility="{Binding IsLoggedIn, Converter = {StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
             </MenuItem>
         </Menu>

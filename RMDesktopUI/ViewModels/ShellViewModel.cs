@@ -14,15 +14,13 @@ namespace RMDesktopUI.ViewModels
     public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>
     {
         private readonly IEventAggregator _eventAggregator;
-        private readonly SalesViewModel _salesViewModel;
         private readonly ILoggedInUserModel _userModel;
         private IApiHelper _apiHelper;
 
-        public ShellViewModel(IEventAggregator eventAggregator, SalesViewModel salesViewModel, ILoggedInUserModel userModel,
+        public ShellViewModel(IEventAggregator eventAggregator, ILoggedInUserModel userModel,
             IApiHelper apiHelper)
         {
             _eventAggregator = eventAggregator;
-            _salesViewModel = salesViewModel;
             _userModel = userModel;
             _apiHelper = apiHelper;
 
@@ -52,13 +50,6 @@ namespace RMDesktopUI.ViewModels
             NotifyOfPropertyChange(() => IsLoggedIn);
         }
 
-        //public void SignIn()
-        //{
-        //    _userModel.ResetUserModel();
-        //    ActivateItemAsync(IoC.Get<LoginViewModel>());
-        //    NotifyOfPropertyChange(() => IsLoggedIn);
-        //}
-
         public bool IsLoggedIn
         {
             get
@@ -76,7 +67,7 @@ namespace RMDesktopUI.ViewModels
 
         public async Task HandleAsync(LogOnEvent message, CancellationToken cancellationToken)
         {
-            await ActivateItemAsync(_salesViewModel, cancellationToken);
+            await ActivateItemAsync(IoC.Get<SalesViewModel>(), cancellationToken);
             NotifyOfPropertyChange(() => IsLoggedIn);
             //NotifyOfPropertyChange(() => IsLoggedIn);
         }
