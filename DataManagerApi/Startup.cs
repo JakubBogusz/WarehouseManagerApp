@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TRMDataManager.Library.DataAccess;
+using TRMDataManager.Library.Internal.DataAccess;
 
 namespace DataManagerApi
 {
@@ -38,6 +40,14 @@ namespace DataManagerApi
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            // Personal Services
+            services.AddTransient<IInventoryData, InventoryData>();
+            services.AddTransient<ISqlDataAccess, SqlDataAccess>();
+            services.AddTransient<IProductData, ProductData>();
+            services.AddTransient<ISaleData, SaleData>();
+            services.AddTransient<IUserData, UserData>();
+
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = "JwtBearer";

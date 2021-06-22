@@ -9,29 +9,25 @@ using TRMDataManager.Library.Models;
 
 namespace TRMDataManager.Library.DataAccess
 {
-    public class ProductData
+    public class ProductData : IProductData
     {
-        private readonly IConfiguration _config;
+        private readonly ISqlDataAccess _sqlDataAccess;
 
-        public ProductData(IConfiguration config)
+        public ProductData(ISqlDataAccess sqlDataAccess)
         {
-            _config = config;
+            _sqlDataAccess = sqlDataAccess;
         }
 
         public List<ProductModel> GetProducts()
         {
-            SqlDataAccess sql = new SqlDataAccess(_config);
-
-            var output = sql.LoadData<ProductModel, dynamic>("dbo.spProduct_GetAll", new { }, "WarehouseManagerData");
+            var output = _sqlDataAccess.LoadData<ProductModel, dynamic>("dbo.spProduct_GetAll", new { }, "WarehouseManagerData");
 
             return output;
         }
 
         public ProductModel GetProductById(int productId)
         {
-            SqlDataAccess sql = new SqlDataAccess(_config);
-
-            var output = sql.LoadData<ProductModel, dynamic>("dbo.spGetById", new { Id = productId }, "WarehouseManagerData").FirstOrDefault();
+            var output = _sqlDataAccess.LoadData<ProductModel, dynamic>("dbo.spGetById", new { Id = productId }, "WarehouseManagerData").FirstOrDefault();
 
             return output;
         }
