@@ -6,32 +6,70 @@ using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using RMDesktopUI.EventModels;
+using RMDesktopUI.Library.Api;
+using RMDesktopUI.Library.Models;
 
 namespace RMDesktopUI.ViewModels
 {
     public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>
     {
-        // TODO - is something breaks had to be without readonly before
         private readonly IEventAggregator _eventAggregator;
-        private readonly SalesViewModel _salesViewModel;
+        private readonly ILoggedInUserModel _userModel;
+        private IApiHelper _apiHelper;
 
-        public ShellViewModel(IEventAggregator eventAggregator, SalesViewModel salesViewModel)
+        public ShellViewModel(IEventAggregator eventAggregator, ILoggedInUserModel userModel,
+            IApiHelper apiHelper)
         {
             _eventAggregator = eventAggregator;
-            _salesViewModel = salesViewModel;
+            _userModel = userModel;
+            _apiHelper = apiHelper;
 
-            _eventAggregator.Subscribe(this);
-            
-            
-            ActivateItemAsync(IoC.Get<LoginViewModel>()); 
-          
+            _eventAggregator.SubscribeOnPublishedThread(this);
+
+
+            ActivateItemAsync(IoC.Get<LoginViewModel>(), new CancellationToken());
+
+        }
+
+        public void ExitApplication()
+        {
+            TryCloseAsync();
+        }
+
+        public async Task UserManagement()
+        {
+            await ActivateItemAsync(IoC.Get<UserDisplayViewModel>(), new CancellationToken());
+        }
+
+        public async Task LogOut()
+        {
+            _userModel.ResetUserModel();
+            _apiHelper.LogOffUser();
+
+            await ActivateItemAsync(IoC.Get<LoginViewModel>(), new CancellationToken());
+            NotifyOfPropertyChange(() => IsLoggedIn);
+        }
+
+        public bool IsLoggedIn
+        {
+            get
+            {
+                bool output = false;
+
+                if (string.IsNullOrWhiteSpace(_userModel.Token) == false)
+                {
+                    output = true;
+                }
+
+                return output;
+            }
         }
 
         public async Task HandleAsync(LogOnEvent message, CancellationToken cancellationToken)
         {
-             
-             await ActivateItemAsync(_salesViewModel, cancellationToken);
-             //NotifyOfPropertyChange(() => IsLoggedIn);
+            await ActivateItemAsync(IoC.Get<SalesViewModel>(), cancellationToken);
+            NotifyOfPropertyChange(() => IsLoggedIn);
+            //NotifyOfPropertyChange(() => IsLoggedIn);
         }
     }
 }

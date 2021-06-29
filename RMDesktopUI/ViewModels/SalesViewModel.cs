@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using AutoMapper;
 using Caliburn.Micro;
 using RMDesktopUI.Library.Api;
 using RMDesktopUI.Library.Helpers;
 using RMDesktopUI.Library.Models;
+using RMDesktopUI.Models;
 
 namespace RMDesktopUI.ViewModels
 {
@@ -16,55 +20,112 @@ namespace RMDesktopUI.ViewModels
         private IProductEndpoint _productEndpoint;
         private IConfigHelper _configHelper;
         private ISaleEndpoint _saleEndpoint;
+        private IMapper _mapper;
+        private readonly StatusInfoViewModel _statusInfo;
+        private readonly IWindowManager _windowManager;
 
-        public SalesViewModel(IProductEndpoint productEndpoint, IConfigHelper configHelper, ISaleEndpoint saleEndpoint)
+        public SalesViewModel(IProductEndpoint productEndpoint, IConfigHelper configHelper, 
+            ISaleEndpoint saleEndpoint, IMapper mapper, StatusInfoViewModel statusInfo, IWindowManager windowManager)
         {
             _productEndpoint = productEndpoint;
             _configHelper = configHelper;
             _saleEndpoint = saleEndpoint;
-
+            _mapper = mapper;
+            _statusInfo = statusInfo;
+            _windowManager = windowManager;
         }
         protected override async void OnViewLoaded(object view)
         {
             base.OnViewLoaded(view);
-            await LoadProducts();
+            try
+            {
+                await LoadProducts();
+            }
+            catch (Exception ex)
+            {
+                dynamic settings = new ExpandoObject();
+                settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                settings.ResizeMode = ResizeMode.NoResize;
+                settings.Title = "System Error";
+
+                if (ex.Message == "Unauthorized")
+                {
+                    _statusInfo.UpdateMessage("Unauthorized Access", "You do not have permission to interact with this part of application.");
+                    await _windowManager.ShowDialogAsync(_statusInfo, null, settings);
+                }
+                else
+                {
+                    _statusInfo.UpdateMessage("Fatal Exception", ex.Message);
+                    await _windowManager.ShowDialogAsync(_statusInfo, null, settings);
+                }
+
+                await TryCloseAsync();
+            }
         }
 
         private async Task LoadProducts()
         {
             var productList = await _productEndpoint.GetAll();
-            Products = new BindingList<UIProductModel>(productList);
+            var products = _mapper.Map<List<UIProductDisplayModel>>(productList);
+            Products = new BindingList<UIProductDisplayModel>(products);
         }
 
 
-        private UIProductModel _selectedProduct;
+        private UIProductDisplayModel _selectedProductDisplay;
 
-        public UIProductModel SelectedProduct
+        public UIProductDisplayModel SelectedProductDisplay
         {
-            get { return _selectedProduct; }
+            get { return _selectedProductDisplay; }
             set
             {
-                _selectedProduct = value;
-                NotifyOfPropertyChange(() => SelectedProduct);
+                _selectedProductDisplay = value;
+                NotifyOfPropertyChange(() => SelectedProductDisplay);
                 NotifyOfPropertyChange(() => CanAddToCart);
             }
         }
 
-        private BindingList<UIProductModel> _products;
+        private BindingList<UIProductDisplayModel> _products;
 
-        public BindingList<UIProductModel> Products
+        public BindingList<UIProductDisplayModel> Products
         {
             get { return _products; }
             set
             {
-                _products = value; 
+                _products = value;
                 NotifyOfPropertyChange(() => Products);
             }
         }
 
-        private BindingList<CartItemModel> _cart = new BindingList<CartItemModel>();
+        private async Task ResetSalesViewModel()
+        {
+            Cart = new BindingList<CartItemDisplayModel>();
 
-        public BindingList<CartItemModel> Cart
+            // TODO - Add clearing the selectedCartItem if it does not doing itself
+
+            await LoadProducts();
+
+            NotifyOfPropertyChange(() => SubTotal);
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
+        }
+
+        private CartItemDisplayModel _selectedCartItem;
+
+        public CartItemDisplayModel SelectedCartItem
+        {
+            get { return _selectedCartItem; }
+            set
+            {
+                _selectedCartItem = value;
+                NotifyOfPropertyChange(() => SelectedCartItem);
+                NotifyOfPropertyChange(() => CanRemoveFromCart);
+            }
+        }
+
+        private BindingList<CartItemDisplayModel> _cart = new BindingList<CartItemDisplayModel>();
+
+        public BindingList<CartItemDisplayModel> Cart
         {
             get { return _cart; }
             set
@@ -116,11 +177,12 @@ namespace RMDesktopUI.ViewModels
             taxAmount = Cart
                 .Where(x => x.Product.IsTaxable)
                 .Sum(x => x.Product.RetailPrice * x.QuantityInCart * taxRate);
+
             //foreach (var item in Cart)
             //{
-            //    if (item.Product.IsTaxable)
+            //    if (item.ProductDisplay.IsTaxable)
             //    {
-            //        taxAmount += (item.Product.RetailPrice * item.QuantityInCart * taxRate);
+            //        taxAmount += (item.ProductDisplay.RetailPrice * item.QuantityInCart * taxRate);
             //    }
             //}
 
@@ -154,7 +216,7 @@ namespace RMDesktopUI.ViewModels
             {
                 bool output = false;
                 
-                if (ItemQuantity > 0 && SelectedProduct?.QuantityInStock >= ItemQuantity)
+                if (ItemQuantity > 0 && SelectedProductDisplay?.QuantityInStock >= ItemQuantity)
                 {
                     output = true;
                 }
@@ -165,35 +227,31 @@ namespace RMDesktopUI.ViewModels
         }
         public void AddToCart()
         {
-            CartItemModel existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
+            CartItemDisplayModel existingItemDisplay = Cart.FirstOrDefault(x => x.Product == SelectedProductDisplay);
 
-            if (existingItem != null)
+            if (existingItemDisplay != null)
             {
-                existingItem.QuantityInCart += ItemQuantity;
-                SelectedProduct.QuantityInStock -= ItemQuantity;
+                existingItemDisplay.QuantityInCart += ItemQuantity;
 
-                // Not the best way of refresh the value in the cart
-                Cart.Remove(existingItem);
-                Cart.Add(existingItem);
             }
             else
             {
-                CartItemModel item = new CartItemModel
+                CartItemDisplayModel itemDisplay = new CartItemDisplayModel
                 {
-                    Product = SelectedProduct,
+                    Product = SelectedProductDisplay,
                     QuantityInCart = ItemQuantity
                 };
 
-                Cart.Add(item);
+                Cart.Add(itemDisplay);
             }
 
-            SelectedProduct.QuantityInStock -= ItemQuantity;
+            SelectedProductDisplay.QuantityInStock -= ItemQuantity;
             ItemQuantity = 1;
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
             NotifyOfPropertyChange(() => CanCheckOut);
-            //NotifyOfPropertyChange(() => existingItem.DisplayText);
+            //NotifyOfPropertyChange(() => existingItemDisplay.DisplayText);
 
         }
 
@@ -203,8 +261,10 @@ namespace RMDesktopUI.ViewModels
             {
                 bool output = false;
 
-                //Make sure something is selected 
-
+                if (SelectedCartItem != null && SelectedCartItem?.QuantityInCart > 0)
+                {
+                    output = true;
+                }
 
                 return output;
             }
@@ -212,10 +272,22 @@ namespace RMDesktopUI.ViewModels
 
         public void RemoveFromCart()
         {
+            SelectedCartItem.Product.QuantityInStock += 1;
+
+            if (SelectedCartItem.QuantityInCart > 1)
+            {
+                SelectedCartItem.QuantityInCart -= 1;
+            }
+            else
+            {
+                Cart.Remove(SelectedCartItem);
+            }
+
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
             NotifyOfPropertyChange(() => CanCheckOut);
+            NotifyOfPropertyChange(() => CanAddToCart);
         }
      
 
@@ -249,6 +321,8 @@ namespace RMDesktopUI.ViewModels
             }
 
             await _saleEndpoint.PostSale(sale);
+
+            await ResetSalesViewModel();
         }
 
     }
