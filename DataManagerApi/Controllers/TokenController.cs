@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DataManagerApi.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DataManagerApi.Controllers
@@ -16,11 +17,13 @@ namespace DataManagerApi.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public TokenController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public TokenController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IConfiguration configuration)
         {
             _context = context;
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         [Route("/token")]
@@ -66,10 +69,12 @@ namespace DataManagerApi.Controllers
                 claims.Add(new Claim(ClaimTypes.Role, role.Name));
             }
 
+            string key = _configuration.GetValue<string>("Secrets:SecurityKey");
+
             var token = new JwtSecurityToken(
                 new JwtHeader(
                     new SigningCredentials(
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MySecretKeyIsSecretSoDoNotTell")),
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
                         SecurityAlgorithms.HmacSha256)),
                 new JwtPayload(claims));
 
