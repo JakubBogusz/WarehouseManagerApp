@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using RMDesktopUI.Library.Api;
 using RMDesktopUI.Library.Models;
-using RMDesktopUI.Models;
 
 namespace RMDesktopUI.Library.Api
 {
