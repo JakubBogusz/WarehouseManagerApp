@@ -20,7 +20,11 @@
             </MenuItem>
         </Menu>
         <Grid>
-            <ContentControl x:Name="ActiveItem" Margin="20 5 20 20"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="37*"/>
+                <ColumnDefinition Width="463*"/>
+            </Grid.ColumnDefinitions>
+            <ContentControl x:Name="ActiveItem" Margin="20 5 20 20" Grid.ColumnSpan="2"/>
         </Grid>
     </DockPanel>
 </Window>
