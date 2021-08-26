@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataManagerApi", "DataManag
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApps", "WebApps", "{991AA86C-0E9A-4F70-8187-DC200FD0141E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal", "Portal\Portal.csproj", "{E66A3817-2A4D-4808-98ED-17A4F21AF089}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portal", "Portal\Portal.csproj", "{E66A3817-2A4D-4808-98ED-17A4F21AF089}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

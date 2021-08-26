@@ -20,6 +20,7 @@ namespace Portal.Authentication
         {
             _httpClient = httpClient;
             _localStorageService = localStorageService;
+            _anonymousState = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
