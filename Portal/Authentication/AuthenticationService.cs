@@ -34,9 +34,10 @@ namespace Portal.Authentication
                 new KeyValuePair<string, string>("grant_type", "password"),
                 new KeyValuePair<string, string>("username", userForAuthentication.Email),
                 new KeyValuePair<string, string>("password", userForAuthentication.Password)
+
             });
 
-            var authResult = await _client.PostAsync("http://localhost:5001/token", data);
+            HttpResponseMessage authResult = await _client.PostAsync("https://localhost:44301/token", data);
             var authContent = await authResult.Content.ReadAsStringAsync();
 
             if (authResult.IsSuccessStatusCode == false)
@@ -47,7 +48,7 @@ namespace Portal.Authentication
             var result = JsonSerializer.Deserialize<AuthenticatedUserModel>(
                 authContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            await _localStorageService.SetItemAsync("authToken", result?.Access_Token);
+            await _localStorageService.SetItemAsync("authToken", result.Access_Token);
 
             ((AuthStateProvider)_authenticationStateProvider).NotifyUserAuthentication(result.Access_Token);
 

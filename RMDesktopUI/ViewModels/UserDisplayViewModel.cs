@@ -107,7 +107,9 @@ namespace RMDesktopUI.ViewModels
             {
                 _selectedAvailableRole = value;
                 NotifyOfPropertyChange(() => SelectedAvailableRole);
-                NotifyOfPropertyChange(() => CanAddSelectedRole);
+                //NotifyOfPropertyChange(() => CanAddSelectedRole);
+                //NotifyOfPropertyChange(() => CanRemoveSelectedRole);
+
             }
         }
 

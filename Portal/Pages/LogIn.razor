@@ -1,5 +1,7 @@
-﻿@page "/login"
-@inject IAuthenticationService AuthService
+﻿@using Portal.Models
+@using Portal.Authentication
+@page "/login"
+@inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavManager
 
 <h3>LogIn</h3>
@@ -30,7 +32,7 @@
             <ValidationMessage For="@(() => model.Password)" />
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-12" text-right>
             <button type="submit" class="btn btn-success">Log In</button>
@@ -48,7 +50,7 @@
     {
         showAuthenticationError = false;
 
-        var result = AuthService.Login(model);
+        var result = await AuthenticationService.Login(model);
 
         if (result is not null)
         {
