@@ -46,7 +46,6 @@ namespace RMDesktopUI.ViewModels
                 UserRoles = new BindingList<string>(value.Roles.Select(x => x.Value).ToList());
                 LoadRoles().GetAwaiter();
                 NotifyOfPropertyChange(() => SelectedUser);
-                //NotifyOfPropertyChange(() => UserRoles);
             }
         }
 
@@ -59,6 +58,7 @@ namespace RMDesktopUI.ViewModels
             {
                 _selectedUserName = value;
                 NotifyOfPropertyChange(() => SelectedUserName);
+                NotifyOfPropertyChange(() => CanRemoveSelectedRole);
             }
         }
 
@@ -107,6 +107,9 @@ namespace RMDesktopUI.ViewModels
             {
                 _selectedAvailableRole = value;
                 NotifyOfPropertyChange(() => SelectedAvailableRole);
+                //NotifyOfPropertyChange(() => CanAddSelectedRole);
+                //NotifyOfPropertyChange(() => CanRemoveSelectedRole);
+
             }
         }
 
@@ -157,11 +160,28 @@ namespace RMDesktopUI.ViewModels
         {
             var roles = await _userEndpoint.GetAllRoles();
 
+            AvailableRoles.Clear();
+
             foreach (var role in roles)
             {
                 if (UserRoles.IndexOf(role.Value) < 0)
                 {
                     AvailableRoles.Add(role.Value);
+                }
+            }
+        }
+
+        public bool CanAddSelectedRole
+        {
+            get
+            {
+                if (SelectedUser is null || SelectedAvailableRole is null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
                 }
             }
         }
@@ -172,6 +192,20 @@ namespace RMDesktopUI.ViewModels
 
             UserRoles.Add(SelectedAvailableRole);
             AvailableRoles.Remove(SelectedAvailableRole);
+        }
+        public bool CanRemoveSelectedRole
+        {
+            get
+            {
+                if (SelectedUser is null || SelectedAvailableRole is null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
         }
 
         public async void RemoveSelectedRole()

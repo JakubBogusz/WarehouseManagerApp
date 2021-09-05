@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace RMDesktopUI.Library.Models
+namespace Portal.Models
 {
-    public class AuthenticatedUser
+    public class AuthenticatedUserModel
     {
         public string Access_Token { get; set; }
+
         public string UserName { get; set; }
     }
 }

@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="PublishLocations\RetailManagerData.publish.xml" />
+    <None Include="RetailManagerData.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Sale.sql" />

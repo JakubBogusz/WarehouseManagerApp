@@ -6,6 +6,8 @@ namespace TRMDataManager.Library.DataAccess
     public interface ISaleData
     {
         void SaveSale(SaleModel saleInfo, string cashierId);
+        decimal GetTaxRate();
         List<SaleReportModel> GetSaleReport();
+
     }
 }
