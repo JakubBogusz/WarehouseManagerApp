@@ -15,7 +15,7 @@ namespace RMDesktopUI.Library.Api
     {
         private HttpClient _apiClient;
 
-        private ILoggedInUserModel _loggedInUser;
+        private readonly ILoggedInUserModel _loggedInUser;
 
         public ApiHelper(ILoggedInUserModel loggedInUser)
         {
@@ -48,7 +48,7 @@ namespace RMDesktopUI.Library.Api
             _apiClient.DefaultRequestHeaders.Clear();
         }
 
-        public async Task<AuthenticatedUser> Authenticate(string username, string password)
+        public async Task<AuthenticatedUser> AuthenticateUser(string username, string password)
         {
             var data = new FormUrlEncodedContent(new[]
             {
@@ -56,7 +56,6 @@ namespace RMDesktopUI.Library.Api
                 new KeyValuePair<string, string>("username", username),
                 new KeyValuePair<string, string>("password", password)
             });
-
 
             using (HttpResponseMessage response = await _apiClient.PostAsync("/Token", data))
             {
@@ -69,7 +68,6 @@ namespace RMDesktopUI.Library.Api
                 {
                     throw new Exception(response.ReasonPhrase);
                 }
-
             }
 
         }

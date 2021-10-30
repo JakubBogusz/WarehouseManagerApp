@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Documents;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using RMDesktopUI.EventModels;
 using RMDesktopUI.Library.Api;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RMDesktopUI.ViewModels
 {
@@ -96,7 +90,7 @@ namespace RMDesktopUI.ViewModels
             try
             {
                 ErrorMessage = "";
-                var result = await _apiHelper.Authenticate(UserName, Password);
+                var result = await _apiHelper.AuthenticateUser(UserName, Password);
                 
                 //Capture more information about the user
                 await _apiHelper.GetLoggedInUserInfo(result.Access_Token);

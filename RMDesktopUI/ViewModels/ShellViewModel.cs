@@ -50,6 +50,12 @@ namespace RMDesktopUI.ViewModels
             NotifyOfPropertyChange(() => IsLoggedIn);
         }
 
+        public async Task SalesAction()
+        {
+            await ActivateItemAsync(IoC.Get<SalesViewModel>(), new CancellationToken());
+            NotifyOfPropertyChange(() => IsLoggedIn);
+        }
+
         public bool IsLoggedIn
         {
             get
@@ -69,7 +75,6 @@ namespace RMDesktopUI.ViewModels
         {
             await ActivateItemAsync(IoC.Get<SalesViewModel>(), cancellationToken);
             NotifyOfPropertyChange(() => IsLoggedIn);
-            //NotifyOfPropertyChange(() => IsLoggedIn);
         }
     }
 }
