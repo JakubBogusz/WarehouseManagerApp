@@ -99,7 +99,8 @@ namespace RMDesktopUI.ViewModels
             }
             catch (Exception ex)
             {
-                ErrorMessage = ex.Message;
+                ErrorMessage = ex.Message + ": Invalid username or password. Please try again.";
+                throw;
             }
         }
     }
