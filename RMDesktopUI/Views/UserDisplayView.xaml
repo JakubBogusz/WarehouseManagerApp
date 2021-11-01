@@ -26,9 +26,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!--Header-->
         <TextBlock Text="User Administration" FontSize="48" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0 0 0 20"/>
-
         <!-- Column 0 -->
         <TextBlock Text="Users" Grid.Row="1" Grid.Column="0"/>
         <ListBox x:Name="Users" Grid.Row="2" Grid.Column="0" 
@@ -44,7 +42,6 @@
         </ListBox>
 
         <!-- Column 1 -->
-
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" 
                     Margin="20 0 0 0">
             <TextBlock x:Name="SelectedUserName" Margin="0 0 0 10"/>

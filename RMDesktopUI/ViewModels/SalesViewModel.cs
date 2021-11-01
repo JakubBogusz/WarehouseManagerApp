@@ -17,10 +17,10 @@ namespace RMDesktopUI.ViewModels
 {
     public class SalesViewModel : Screen
     {
-        private IProductEndpoint _productEndpoint;
-        private IConfigHelper _configHelper;
-        private ISaleEndpoint _saleEndpoint;
-        private IMapper _mapper;
+        private readonly IProductEndpoint _productEndpoint;
+        private readonly IConfigHelper _configHelper;
+        private readonly ISaleEndpoint _saleEndpoint;
+        private readonly IMapper _mapper;
         private readonly StatusInfoViewModel _statusInfo;
         private readonly IWindowManager _windowManager;
 
@@ -195,9 +195,7 @@ namespace RMDesktopUI.ViewModels
             {
                 return CalculateTax().ToString("C");
             }
-
         }
-
 
         public string Total
         {
@@ -295,13 +293,8 @@ namespace RMDesktopUI.ViewModels
         {
             get
             {
-                bool output = false;
-
                 //Make sure something is something in the cart
-                if (Cart.Count > 0)
-                {
-                    output = true;
-                }
+                bool output = Cart.Count > 0;
 
                 return output;
             }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RMDesktopUI.Views"
         mc:Ignorable="d"
-        Title="ShellView" Height="600" Width="1000">
+        Title="ShellView" Height="700" Width="1000">
     <DockPanel>
         <Menu DockPanel.Dock="Top" FontSize="18">
             <MenuItem Header="_File">
@@ -17,6 +17,9 @@
             <MenuItem Header="_Account" Visibility="Visible" >
                 <MenuItem x:Name="LogIn" Header="Log _In" Visibility="{Binding IsLoggedOut, Converter = {StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" />
                 <MenuItem x:Name="LogOut" Header="_Log Out" Visibility="{Binding IsLoggedIn, Converter = {StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
+            </MenuItem>
+            <MenuItem Header="_Main Page" Visibility="{Binding IsLoggedIn, Converter = {StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" >
+                <MenuItem x:Name="SalesAction" Header="_Back To Sales" />
             </MenuItem>
         </Menu>
         <Grid>

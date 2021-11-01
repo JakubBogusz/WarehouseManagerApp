@@ -5,6 +5,9 @@
     <UseWpf>true</UseWpf>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Images\login-background.jpg" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Caliburn.Micro" Version="4.0.173" />
     <PackageReference Include="Caliburn.Micro.Core" Version="4.0.173" />
@@ -18,5 +21,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RMDesktopUI.Library\RMDesktopUI.Library.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\login-background.jpg" />
   </ItemGroup>
 </Project>

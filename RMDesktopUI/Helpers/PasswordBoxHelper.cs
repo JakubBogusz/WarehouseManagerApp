@@ -9,6 +9,7 @@ using System.Windows.Controls;
 
 namespace RMDesktopUI.Helpers
 {
+    // PasswordBox helper from stack overflow
     public static class PasswordBoxHelper
     {
         public static readonly DependencyProperty BoundPasswordProperty =

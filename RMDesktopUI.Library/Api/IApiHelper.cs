@@ -7,7 +7,7 @@ namespace RMDesktopUI.Library.Api
 {
     public interface IApiHelper
     {
-        Task<AuthenticatedUser> Authenticate(string username, string password);
+        Task<AuthenticatedUser> AuthenticateUser(string username, string password);
 
         Task GetLoggedInUserInfo(string token);
 

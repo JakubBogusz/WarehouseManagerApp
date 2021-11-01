@@ -58,6 +58,7 @@ namespace RMDesktopUI.ViewModels
             {
                 _selectedUserName = value;
                 NotifyOfPropertyChange(() => SelectedUserName);
+                NotifyOfPropertyChange(() => CanAddSelectedRole);
                 NotifyOfPropertyChange(() => CanRemoveSelectedRole);
             }
         }
@@ -107,8 +108,8 @@ namespace RMDesktopUI.ViewModels
             {
                 _selectedAvailableRole = value;
                 NotifyOfPropertyChange(() => SelectedAvailableRole);
-                //NotifyOfPropertyChange(() => CanAddSelectedRole);
-                //NotifyOfPropertyChange(() => CanRemoveSelectedRole);
+                NotifyOfPropertyChange(() => CanAddSelectedRole);
+                NotifyOfPropertyChange(() => CanRemoveSelectedRole);
 
             }
         }
@@ -193,17 +194,18 @@ namespace RMDesktopUI.ViewModels
             UserRoles.Add(SelectedAvailableRole);
             AvailableRoles.Remove(SelectedAvailableRole);
         }
+
         public bool CanRemoveSelectedRole
         {
             get
             {
                 if (SelectedUser is null || SelectedAvailableRole is null)
                 {
-                    return false;
+                    return true;
                 }
                 else
                 {
-                    return true;
+                    return false;
                 }
             }
         }

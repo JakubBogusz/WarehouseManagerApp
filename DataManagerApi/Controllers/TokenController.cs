@@ -28,7 +28,7 @@ namespace DataManagerApi.Controllers
 
         [Route("/token")]
         [HttpPost]
-        public async Task<IActionResult> Create(string username, string password, string grant_type)
+        public async Task<IActionResult> CreateToken(string username, string password, string grant_type)
         {
             if (await IsValidUserNameAndPassword(username, password))
             {
@@ -71,9 +71,8 @@ namespace DataManagerApi.Controllers
 
             string key = _configuration.GetValue<string>("Secrets:SecurityKey");
 
-            var token = new JwtSecurityToken(
-                new JwtHeader(
-                    new SigningCredentials(
+            var token = new JwtSecurityToken(new JwtHeader(
+                        new SigningCredentials(
                         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
                         SecurityAlgorithms.HmacSha256)),
                 new JwtPayload(claims));

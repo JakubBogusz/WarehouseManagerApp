@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RMDesktopUI.Views
+namespace RMDesktopUI.ViewModels
 {
     /// <summary>
-    /// Interaction logic for LoginView.xaml
+    /// Interaction logic for RegisterView.xaml
     /// </summary>
-    public partial class LoginView : UserControl
+    public partial class RegisterView : UserControl
     {
-        public LoginView()
+        public RegisterView()
         {
             InitializeComponent();
         }

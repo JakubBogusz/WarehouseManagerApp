@@ -4,48 +4,100 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RMDesktopUI.Views"
-             mc:Ignorable="d" Background="White" FontSize="24"
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>   
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Margin="0 0 0 20"
-                   HorizontalAlignment="Center" FontSize="64" FontFamily="Segoe UI Light">
-            Login Form
-        </TextBlock>
+             mc:Ignorable="d" FontSize="24"
+             d:DesignHeight="550" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <UserControl.Background>
+        <ImageBrush
+            ImageSource="/Images/login-background.jpg"
+            Opacity="0.5"
+            Stretch="UniformToFill" />
+    </UserControl.Background>
+    <Border Margin="25" Padding="50"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Background="White"
+        BorderBrush="RoyalBlue"
+        BorderThickness="3"
+        CornerRadius="10">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="10" Color="Gray" />
+        </Border.Effect>
+        <Grid Grid.IsSharedSizeScope="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
 
-        <!-- Error Message row -->
-        <TextBlock x:Name="ErrorMessage" Grid.Row="1" Visibility="{Binding IsErrorVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"
-                   Grid.Column="1" Grid.ColumnSpan="2" Margin="0 0 0 20" 
-                   Foreground="#FFEE0B0B" MaxWidth="300" TextWrapping="Wrap"/>
-        <!-- Username row -->
-        <TextBlock Grid.Row="2" Grid.Column="1" Margin=" 0 0 5 10">
-            Username:
-        </TextBlock>
-        <TextBox x:Name="UserName" Grid.Row="2" Grid.Column="2" MinWidth="350" Margin="0 0 0 10"/>
+            <TextBlock Grid.Row="0"
+                HorizontalAlignment="Center"
+                FontSize="44"
+                Text="Warehouse Manager" />
 
-        <!--Password row-->
-        <TextBlock Grid.Row="3" Grid.Column="1" Margin="0 0 0 10" >
-            Password:
-        </TextBlock>
-        <PasswordBox x:Name="Password" Grid.Row="3" Grid.Column="2" MinWidth="350" Margin="0 0 5 10"/>
+            <TextBlock Grid.Row="1" Margin="0 10"
+                HorizontalAlignment="Center"
+                FontSize="18"
+                FontWeight="Thin"
+                Text="The best tool to track warehouse operations." />
 
-        <!--Login row-->
-        <Button Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Padding="20 5"
-                HorizontalAlignment="Center" x:Name="LogIn" Click="LogIn_Click">
-            Log In
-        </Button>
-    </Grid>
+            <Grid Grid.Row="2" Margin="0 20" MinWidth="480">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" SharedSizeGroup="Label" />
+                        <ColumnDefinition Width="300" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Username row -->
+                    <TextBlock Grid.Column="0">
+                        Username:
+                    </TextBlock>
+                    <TextBox x:Name="UserName" Grid.Column="1" MinWidth="280" Margin="20 0 0 0"
+		                Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="0 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" SharedSizeGroup="Label" />
+                        <ColumnDefinition Width="300" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--Password row-->
+                    <TextBlock Grid.Column="0" Margin="0 0 0 10" >
+                        Password:
+                    </TextBlock>
+                    <PasswordBox x:Name="Password" Grid.Column="1" MinWidth="280" Margin="20 0 0 0"/>
+
+                </Grid>
+
+                <Button x:Name="LogIn" Grid.Row="2" Margin="0 10"
+                    HorizontalAlignment="Center"
+                    Command="{Binding LogIn}"
+                    Content="Login"
+                    IsDefault="True" />
+
+                <Button Grid.Row="3" Margin="0 10 0 0"
+                    HorizontalAlignment="Center"
+                    Background="Transparent"
+                    Command="{Binding ViewRegisterCommand}"
+                    Content="Don't have an account?"
+                    FontSize="14"
+                    Foreground="Blue" />
+
+                <TextBlock x:Name="ErrorMessage" Grid.Row="4" Visibility="{Binding IsErrorVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"
+                    Margin="0 10 0 0" Foreground="#FFEE0B0B" MaxWidth="350" TextWrapping="Wrap"/>
+
+            </Grid>
+        </Grid>
+    </Border>
 </UserControl>
