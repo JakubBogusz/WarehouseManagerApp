@@ -26,7 +26,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Text="User Management" FontSize="48" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="30 15 0 20" 
+        <TextBlock Text="User Management" FontSize="44" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="30 15 0 20" 
                    FontFamily="Global Serif" Foreground="#FF0A133A"/>
 
         <TextBlock Text="Registered Users" Grid.Row="1" Grid.Column="0" Margin="30 0 0 10" FontWeight="Bold"/>

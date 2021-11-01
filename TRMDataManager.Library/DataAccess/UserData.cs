@@ -18,13 +18,19 @@ namespace TRMDataManager.Library.DataAccess
             _sqlDataAccess = sqlDataAccess;
         }
 
-        public List<UserModel> GetUserById(string Id)
+        public List<UserModel> GetUserById(string userId)
         {
-            var p = new {Id = Id};  // explicit property
+            var p = new {Id = userId};
 
             var output = _sqlDataAccess.LoadData<UserModel, dynamic>("dbo.spUserLookup", p, "WarehouseManagerData");
 
             return output;
+        }
+
+        public void CreateUser(UserModel user)
+        {
+            _sqlDataAccess.SaveData("dbo.spUser_Insert", 
+                new { user.Id, user.FirstName, user.LastName, user.EmailAddress }, "WarehouseManagerData");
         }
     }
 }

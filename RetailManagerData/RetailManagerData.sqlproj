@@ -58,12 +58,10 @@
     <Folder Include="dbo\Tables" />
     <Folder Include="dbo\Views" />
     <Folder Include="dbo\StoredProcedures" />
-    <Folder Include="dbo\PublishLocations" />
     <Folder Include="PublishLocations\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PublishLocations\RetailManagerData.publish.xml" />
-    <None Include="RetailManagerData.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Sale.sql" />
@@ -80,6 +78,7 @@
     <Build Include="dbo\StoredProcedures\spInventory_Insert.sql" />
     <Build Include="dbo\StoredProcedures\spInventory_GetAll.sql" />
     <Build Include="dbo\StoredProcedures\spSale_SaleReport.sql" />
+    <Build Include="dbo\StoredProcedures\spUser_Insert.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="RetailManagerData.refactorlog" />

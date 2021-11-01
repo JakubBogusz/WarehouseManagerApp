@@ -5,6 +5,7 @@ namespace TRMDataManager.Library.DataAccess
 {
     public interface IUserData
     {
-        List<UserModel> GetUserById(string Id);
+        List<UserModel> GetUserById(string userId);
+        void CreateUser(UserModel user);
     }
 }

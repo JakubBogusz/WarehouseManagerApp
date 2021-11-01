@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using TRMDataManager.Library.DataAccess;
 using TRMDataManager.Library.Models;
 
@@ -28,7 +29,7 @@ namespace DataManagerApi.Controllers
         private readonly IUserData _userData;
         private readonly ILogger<UserController> _logger;
 
-        public UserController(ApplicationDbContext context, 
+        public UserController(ApplicationDbContext context,
             UserManager<IdentityUser> userManager,
             IUserData userData, ILogger<UserController> logger)
         {
@@ -42,7 +43,7 @@ namespace DataManagerApi.Controllers
         public UserModel GetById()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-      
+
             return _userData.GetUserById(userId).First();
 
         }
@@ -98,7 +99,7 @@ namespace DataManagerApi.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("Admin/AddRole")]
-        public async Task AddARole(UserRolePairModel pairing)
+        public async Task AddRole(UserRolePairModel pairing)
         {
             string loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var loggedInUser = _userData.GetUserById(loggedInUserId).First();
@@ -113,7 +114,7 @@ namespace DataManagerApi.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("Admin/RemoveRole")]
-        public async Task RemoveARole(UserRolePairModel pairing)
+        public async Task RemoveRole(UserRolePairModel pairing)
         {
             string loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = await _userManager.FindByIdAsync(pairing.UserId);
@@ -122,5 +123,63 @@ namespace DataManagerApi.Controllers
 
             await _userManager.RemoveFromRoleAsync(user, pairing.RoleName);
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("Register")]
+        public async Task<IActionResult> RegisterUser(UserRegistrationModel userRegistration)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var registeredUser = await _userManager.FindByEmailAsync(userRegistration.EmailAddress);
+
+                    if (registeredUser is null)
+                    {
+                        IdentityUser newUser = new IdentityUser
+                        {
+                            Email = userRegistration.EmailAddress,
+                            EmailConfirmed = true,
+                            UserName = userRegistration.EmailAddress
+                        };
+
+                        IdentityResult result = await _userManager.CreateAsync(newUser, userRegistration.Password);
+
+                        if (result.Succeeded)
+                        {
+                            registeredUser = await _userManager.FindByEmailAsync(userRegistration.EmailAddress);
+                            if (registeredUser is null)
+                                return BadRequest();
+
+                            UserModel userModel = new UserModel
+                            {
+                                Id = registeredUser.Id,
+                                FirstName = userRegistration.FirstName,
+                                LastName = userRegistration.LastName,
+                                EmailAddress = userRegistration.EmailAddress,
+                            };
+
+                            _userData.CreateUser(userModel);
+                            _logger.LogInformation("New user: {Email} has been registered successfully.", registeredUser.Email);
+
+                            return Ok();
+                        }
+                    }
+                    else
+                    {
+                        //TODO - display message "An account for this email already exists."
+                    }
+                }
+
+                return BadRequest();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
     }
 }
