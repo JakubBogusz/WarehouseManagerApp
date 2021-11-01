@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RMDesktopUI.Views"
-               mc:Ignorable="d" Background="White" FontSize="24"
-             d:DesignHeight="550" d:DesignWidth="800">
+               mc:Ignorable="d" FontSize="24" Background="WhiteSmoke"
+             d:DesignHeight="550" d:DesignWidth="800" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -26,11 +26,11 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Text="User Administration" FontSize="48" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0 0 0 20"/>
-        <!-- Column 0 -->
-        <TextBlock Text="Users" Grid.Row="1" Grid.Column="0"/>
-        <ListBox x:Name="Users" Grid.Row="2" Grid.Column="0" 
-                 MinHeight="200" MinWidth="150" SelectedItem="SelectedUser" >
+        <TextBlock Text="User Management" FontSize="48" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="30 15 0 20" 
+                   FontFamily="Global Serif" Foreground="#FF0A133A"/>
+
+        <TextBlock Text="Registered Users" Grid.Row="1" Grid.Column="0" Margin="30 0 0 10" FontWeight="Bold"/>
+        <ListBox x:Name="Users" Grid.Row="2" Grid.Column="0" MinHeight="200" MinWidth="300" SelectedItem="SelectedUser" Margin="20 0 0 10" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
@@ -41,19 +41,23 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <!-- Column 1 -->
-        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" 
-                    Margin="20 0 0 0">
-            <TextBlock x:Name="SelectedUserName" Margin="0 0 0 10"/>
-            <TextBlock Text="Current Roles"/>
-            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
-                <ListBox x:Name="UserRoles" />
-                <Button x:Name="RemoveSelectedRole" Content="Remove" Margin="5 0 0 0" />
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" MinWidth="200"
+                    Margin="50 0 0 0">
+            <TextBlock Text="Mange user roles for:" Margin="0 0 0 5" FontWeight="Bold"/>
+            <TextBlock Text="Current Roles" />
+            <StackPanel Orientation="Horizontal" Margin="0 5 0 5">
+                <ListBox x:Name="UserRoles" MinWidth="200" MinHeight="40" HorizontalAlignment="Center"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <ComboBox x:Name="AvailableRoles" />
-                <Button x:Name="AddSelectedRole" Content="Add Role" Margin="5 0 0 0"/>
+            <Button x:Name="RemoveSelectedRole" Content="Remove" HorizontalAlignment="Left" MinWidth="150" Padding="5" Margin="25 5 0 10"/>
+           
+        </StackPanel>
+        <StackPanel Grid.Column="3" Grid.Row="1"  Grid.RowSpan="2" MinWidth="200">
+            <TextBlock x:Name="SelectedUserName" Margin="20 0 0 5"/>
+            <TextBlock Text="Available Roles" Margin="20 0 0 5"/>
+            <StackPanel Orientation="Horizontal" Margin="20 0 0 5" HorizontalAlignment="Left">
+                <ComboBox x:Name="AvailableRoles" MinWidth="200" HorizontalAlignment="Center"/>
             </StackPanel>
+            <Button x:Name="AddSelectedRole" Content="Add Role" HorizontalAlignment="Left" MinWidth="150" Margin="45 5 0 10" Padding="5"/>
         </StackPanel>
     </Grid>
 </UserControl>
