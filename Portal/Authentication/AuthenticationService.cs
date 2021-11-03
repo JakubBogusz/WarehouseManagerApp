@@ -22,7 +22,7 @@ namespace Portal.Authentication
 
         private readonly IConfiguration _configuration;
 
-        private string _authTokenStorageKey;
+        private readonly string _authTokenStorageKey;
 
         public AuthenticationService(HttpClient client, AuthenticationStateProvider authenticationStateProvider,
             ILocalStorageService localStorageService,
@@ -45,8 +45,8 @@ namespace Portal.Authentication
 
             });
 
-            string api = _configuration["apiLocation"] + _configuration["tokenEndpoint"];
-            HttpResponseMessage authResult = await _client.PostAsync("https://localhost:44301/token", data);
+            string api = _configuration["api"] + _configuration["tokenEndpoint"];
+            HttpResponseMessage authResult = await _client.PostAsync(api, data);
             var authContent = await authResult.Content.ReadAsStringAsync();
 
             if (authResult.IsSuccessStatusCode == false)

@@ -13,5 +13,7 @@ namespace RMDesktopUI.Library.Api
         Task AddUserToRole(string userId, string roleName);
 
         Task RemoveUserFromRole(string userId, string roleName);
+
+        Task CreateUser(CreateUserModel userModel);
     }
 }

@@ -76,5 +76,24 @@ namespace RMDesktopUI.Library.Api
                 }
             }
         }
+
+        public async Task CreateUser(CreateUserModel userModel)
+        {
+            var userData = new
+            {
+                userModel.FirstName, 
+                userModel.LastName, 
+                userModel.EmailAddress,
+                userModel.Password
+            };
+
+            using (HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("/api/User/Register", userData))
+            {
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+            }
+        }
     }
 }
