@@ -4,7 +4,7 @@
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavManager
 
-<h3>LogIn</h3>
+<h3>Log In</h3>
 
 @if (showAuthenticationError)
 {
@@ -13,22 +13,21 @@
     </div>
 }
 
-<EditForm Model="model" OnValidSubmit="ExecuteLogin" class="card card-body bg-light mt-5">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<EditForm Model="model" OnValidSubmit="ExecuteLogin" class="">
+
     <div class="form-row">
         <div class="col-auto">
             <label for="email" class="sr-only">Email</label>
             <InputText id="email" class="form-control" @bind-Value="model.Email" placeHolder="Email Address"/>
-            <ValidationMessage For="@(() => model.Email)" />
+            @*<ValidationMessage For="@(() => model.Email)"/>*@
         </div>
-        
+
         <div class="col-auto">
             <label for="password" class="sr-only">Password</label>
             <InputText type="password" id="password" class="form-control" @bind-Value="model.Password" placeHolder="Password"/>
-            <ValidationMessage For="@(() => model.Password)" />
+            @*<ValidationMessage For="@(() => model.Password)"/>*@
         </div>
-        
+
         <div class="col-auto" text-right>
             <button type="submit" class="btn btn-success">Log In</button>
         </div>
